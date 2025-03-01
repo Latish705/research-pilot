@@ -5,22 +5,26 @@ export const verifyToken = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     const token = req.headers.authorization?.split(" ")[1] || req.body.token;
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    if (!token) {
+      res.status(401).json({ message: "Unauthorized" });
+      return;
+    }
 
     const decoded = await admin.auth().verifyIdToken(token);
 
     if (!decoded) {
-      return res.status(401).json({ message: "Unauthorized user" });
+      res.status(401).json({ message: "Unauthorized user" });
+      return;
     }
 
     //@ts-ignore
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized" });
+    res.status(401).json({ message: "Unauthorized" });
   }
 };
 
