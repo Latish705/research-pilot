@@ -28,17 +28,6 @@ const UserSchema = new mongoose.Schema<IUser>(
     { timestamps: true }
 );
 
-UserSchema.methods.generateAuthToken = function () {
-    return jwt.sign({ _id: this._id }, process.env.JWT_SECRET!, { expiresIn: "24h" });
-};
-
-UserSchema.methods.comparePassword = async function (password: string) {
-    return await bcrypt.compare(password, this.password);
-};
-
-UserSchema.statics.hashPassword = async function (password: string) {
-    return await bcrypt.hash(password, 10);
-};
 
 const UserModel = mongoose.model<IUser, IUserModel>("User", UserSchema);
 
