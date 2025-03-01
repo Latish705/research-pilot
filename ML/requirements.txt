@@ -5,3 +5,4 @@ kaggle
 groq
 python-dotenv
 pydantic
+spacy
