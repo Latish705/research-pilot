@@ -177,7 +177,7 @@ export default function Editor() {
     useEffect(() => {
         const fetchPaper = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5000/api/researchpaper/${paperId}`);
+                const { data } = await axios.get(`http://localhost:8080/api/researchpaper/${paperId}`);
                 editor?.commands.setContent(data.content || "<p>Start typing...</p>");
             } catch (error) {
                 console.error("Error fetching document:", error);
@@ -196,7 +196,7 @@ export default function Editor() {
         const saveDocument = async () => {
             try {
                 const content = editor.getHTML();
-                await axios.post("http://localhost:8000/researchpaper/save", {
+                await axios.post("http://localhost:8080/api/researchpaper/save", {
                     paperId,
                     title: "Sample Research Paper", // Replace dynamically
                     content,
