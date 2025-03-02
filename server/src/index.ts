@@ -8,10 +8,9 @@ dotenv.config();
 const PORT = process.env.PORT || 8080;
 connectDb().then(() => {
   app.listen(PORT, () => {
-    startWebSocketServer()
+    startWebSocketServer();
     console.log(
       `Server running on port ${PORT}  url: http://localhost:${PORT}`
     );
   });
 });
-

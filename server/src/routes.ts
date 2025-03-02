@@ -5,6 +5,6 @@ import researchPaperRouter from "./researchPaper/routes/researchpaper.route";
 const appRouter = Router();
 
 appRouter.use("/user", userRouter);
-appRouter.use("/researchpaper",researchPaperRouter)
+appRouter.use("/researchPaper", researchPaperRouter);
 
 export default appRouter;
