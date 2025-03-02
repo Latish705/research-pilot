@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface Message {
   id: string;
@@ -16,6 +17,7 @@ interface Message {
 }
 
 export function Chatbot() {
+  const navigation = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [input, setInput] = useState("");
@@ -29,10 +31,7 @@ export function Chatbot() {
   ]);
 
   const toggleOpen = () => {
-    setIsOpen(!isOpen);
-    if (!isOpen) {
-      setIsMinimized(false);
-    }
+    navigation.push("/chatbot");
   };
 
   const toggleMinimize = () => {
@@ -56,19 +55,33 @@ export function Chatbot() {
     // Simulate bot response
     setTimeout(() => {
       let botResponse = "";
-      
-      if (input.toLowerCase().includes("find") || input.toLowerCase().includes("search")) {
-        botResponse = "To search for papers, you can use the search bar at the top of the dashboard. You can filter results by date, field, and more.";
-      } else if (input.toLowerCase().includes("bookmark") || input.toLowerCase().includes("save")) {
-        botResponse = "You can bookmark papers by clicking the bookmark icon on any paper card. Your bookmarks will appear in the Bookmarks tab.";
+
+      if (
+        input.toLowerCase().includes("find") ||
+        input.toLowerCase().includes("search")
+      ) {
+        botResponse =
+          "To search for papers, you can use the search bar at the top of the dashboard. You can filter results by date, field, and more.";
+      } else if (
+        input.toLowerCase().includes("bookmark") ||
+        input.toLowerCase().includes("save")
+      ) {
+        botResponse =
+          "You can bookmark papers by clicking the bookmark icon on any paper card. Your bookmarks will appear in the Bookmarks tab.";
       } else if (input.toLowerCase().includes("download")) {
-        botResponse = "To download a paper, click the 'View Paper' button on the paper card, then look for the download option on the paper details page.";
-      } else if (input.toLowerCase().includes("hello") || input.toLowerCase().includes("hi")) {
-        botResponse = "Hello! I'm here to help you navigate ResearchHub. What would you like to know?";
+        botResponse =
+          "To download a paper, click the 'View Paper' button on the paper card, then look for the download option on the paper details page.";
+      } else if (
+        input.toLowerCase().includes("hello") ||
+        input.toLowerCase().includes("hi")
+      ) {
+        botResponse =
+          "Hello! I'm here to help you navigate ResearchHub. What would you like to know?";
       } else {
-        botResponse = "I'm here to help you with ResearchHub. You can ask me about finding papers, using features, or navigating the platform.";
+        botResponse =
+          "I'm here to help you with ResearchHub. You can ask me about finding papers, using features, or navigating the platform.";
       }
-      
+
       const botMessage: Message = {
         id: Date.now().toString(),
         content: botResponse,
@@ -93,7 +106,11 @@ export function Chatbot() {
         onClick={toggleOpen}
         className="fixed bottom-6 right-6 rounded-full h-12 w-12 shadow-lg"
       >
-        {isOpen ? <X className="h-5 w-5" /> : <MessageSquare className="h-5 w-5" />}
+        {isOpen ? (
+          <X className="h-5 w-5" />
+        ) : (
+          <MessageSquare className="h-5 w-5" />
+        )}
       </Button>
 
       {/* Chatbot Window */}
@@ -117,7 +134,11 @@ export function Chatbot() {
               </div>
             </div>
             <Button variant="ghost" size="icon" onClick={toggleMinimize}>
-              {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+              {isMinimized ? (
+                <Maximize2 className="h-4 w-4" />
+              ) : (
+                <Minimize2 className="h-4 w-4" />
+              )}
             </Button>
           </div>
 
@@ -131,7 +152,9 @@ export function Chatbot() {
                       key={message.id}
                       className={cn(
                         "flex",
-                        message.sender === "user" ? "justify-end" : "justify-start"
+                        message.sender === "user"
+                          ? "justify-end"
+                          : "justify-start"
                       )}
                     >
                       <div
@@ -165,7 +188,11 @@ export function Chatbot() {
                     placeholder="Type a message..."
                     className="flex-1"
                   />
-                  <Button size="icon" onClick={handleSendMessage} disabled={!input.trim()}>
+                  <Button
+                    size="icon"
+                    onClick={handleSendMessage}
+                    disabled={!input.trim()}
+                  >
                     <Send className="h-4 w-4" />
                   </Button>
                 </div>

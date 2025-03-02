@@ -12,7 +12,9 @@ const ResearchPaperSchema = new Schema<IResearchPaper>(
     title: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     content: { type: String, required: true }, // Added to match IResearchPaper
-    collaborators: { type: [String], required: false }, // Optional
+    collaborators: [
+      { type: Schema.Types.ObjectId, ref: "User", required: false },
+    ],
   },
   { timestamps: true }
 );

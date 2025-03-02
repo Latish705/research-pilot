@@ -1,6 +1,7 @@
 import { Router } from "express";
 import verifyToken from "../../middleware/verifyToken";
 import {
+  handleGetAllPaper,
   handleGetResearchPaper,
   handleSaveResearchPaper,
   handleUpdateResearchPaper,
@@ -15,5 +16,6 @@ researchPaperRouter.put(
   verifyToken,
   handleUpdateResearchPaper
 );
+researchPaperRouter.get("/", verifyToken, handleGetAllPaper);
 
 export default researchPaperRouter;
