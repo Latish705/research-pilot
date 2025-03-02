@@ -26,7 +26,7 @@ export const handleSaveResearchPaper = async (req: Request, res: Response): Prom
 
 export const handleGetResearchPaper = async (req: Request, res: Response): Promise<void>  => {
   try {
-    const paper = await ResearchPaper.findOne({ paperId: req.params.paperId });
+    const paper = await ResearchPaper.findOne({ _id: req.params.paperId });
 
     if (!paper) {
     res.status(404).json({ error: "Document not found" });
