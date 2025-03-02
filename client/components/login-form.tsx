@@ -17,16 +17,28 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import {
+  auth,
+  emailPasswordSignIn,
+  getCurrentUserToken,
+  signInWithGoogle,
+} from "@/utils/firebase";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { BackendUrl } from "@/utils/constants";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
 });
 
 export function LoginForm() {
+  const navigation = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,40 +47,78 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const checkIsLogin = async () => {
+    try {
+      const token = await getCurrentUserToken();
+      const res = await axios.get(`${BackendUrl}/api/user/first_login`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data.isFirstLogin;
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to log in. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      
-      // For demo purposes, we'll just show a success toast
-      // In a real app, you would handle authentication here
+
+    try {
+      await emailPasswordSignIn(values.email, values.password);
       toast({
         title: "Login successful",
         description: "Redirecting to your dashboard...",
       });
-      
-      // Redirect to onboarding form (to be implemented)
-      // window.location.href = "/onboarding";
-    }, 1500);
+      const isFirstLogin = await checkIsLogin();
+      console.log(isFirstLogin);
+      if (isFirstLogin) {
+        navigation.push("/onboarding");
+      } else {
+        navigation.push("/dashboard");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to log in. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
-  function handleGoogleLogin() {
+  async function handleGoogleLogin() {
     setIsLoading(true);
-    
-    // Simulate Google login
-    setTimeout(() => {
-      setIsLoading(false);
-      
+
+    try {
+      await signInWithGoogle();
       toast({
         title: "Google login successful",
         description: "Redirecting to your dashboard...",
       });
-      
-      // Redirect to onboarding form (to be implemented)
-      // window.location.href = "/onboarding";
-    }, 1500);
+
+      const isFirstLogin = await checkIsLogin();
+      console.log(isFirstLogin);
+
+      if (isFirstLogin) {
+        navigation.push("/onboarding");
+      } else {
+        navigation.push("/dashboard");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to log in with Google.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -79,7 +129,7 @@ export function LoginForm() {
           Enter your email below to login to your account
         </p>
       </div>
-      
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -89,13 +139,17 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="name@example.com" {...field} disabled={isLoading} />
+                  <Input
+                    placeholder="name@example.com"
+                    {...field}
+                    disabled={isLoading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="password"
@@ -103,13 +157,18 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="••••••••" {...field} disabled={isLoading} />
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    {...field}
+                    disabled={isLoading}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          
+
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>
@@ -122,7 +181,7 @@ export function LoginForm() {
           </Button>
         </form>
       </Form>
-      
+
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <Separator className="w-full" />
@@ -133,7 +192,7 @@ export function LoginForm() {
           </span>
         </div>
       </div>
-      
+
       <Button
         variant="outline"
         onClick={handleGoogleLogin}
@@ -165,11 +224,14 @@ export function LoginForm() {
         )}
         Google
       </Button>
-      
+
       <div className="text-center text-sm">
         <p className="text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <a href="#" className="underline underline-offset-4 hover:text-primary">
+          <a
+            href="#"
+            className="underline underline-offset-4 hover:text-primary"
+          >
             Sign up
           </a>
         </p>
