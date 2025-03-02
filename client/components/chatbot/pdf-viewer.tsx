@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
-import "@react-pdf-viewer/core/lib/styles/index.css";
+import { Document, Page, pdfjs } from "react-pdf";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,8 +10,11 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronLeft, ChevronRight, X, Download, Loader2 } from "lucide-react";
-import React from "react";
+
+// Set up the worker for PDF.js
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 interface PDFViewerProps {
   url: string;
@@ -22,29 +24,46 @@ interface PDFViewerProps {
 }
 
 export function PDFViewer({ url, title, isOpen, onClose }: PDFViewerProps) {
+  const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [numPages, setNumPages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
       setPageNumber(1);
       setLoading(true);
+      setError(null);
     }
   }, [isOpen, url]);
 
-  const handleDocumentLoadSuccess = (e: any) => {
-    setNumPages(e.numPages);
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setNumPages(numPages);
     setLoading(false);
-  };
+  }
 
-  const previousPage = () => {
-    if (pageNumber > 1) setPageNumber((prevPage) => prevPage - 1);
-  };
+  function onDocumentLoadError(error: Error) {
+    console.error("Error loading PDF:", error);
+    setError(
+      "Failed to load PDF. Please try again or download the file directly."
+    );
+    setLoading(false);
+  }
 
-  const nextPage = () => {
-    if (pageNumber < numPages) setPageNumber((prevPage) => prevPage + 1);
-  };
+  function changePage(offset: number) {
+    setPageNumber((prevPageNumber) => {
+      const newPageNumber = prevPageNumber + offset;
+      return Math.max(1, Math.min(numPages || 1, newPageNumber));
+    });
+  }
+
+  function previousPage() {
+    changePage(-1);
+  }
+
+  function nextPage() {
+    changePage(1);
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -79,29 +98,51 @@ export function PDFViewer({ url, title, isOpen, onClose }: PDFViewerProps) {
         <div className="flex-1 overflow-hidden">
           {loading && (
             <div className="h-full flex items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <div className="flex flex-col items-center gap-2">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="text-sm text-muted-foreground">Loading PDF...</p>
+              </div>
             </div>
           )}
 
-          <Worker
-            workerUrl={`https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js`}
-          >
-            <Viewer
-              fileUrl={url}
-              onDocumentLoad={handleDocumentLoadSuccess}
-              initialPage={pageNumber - 1}
-              defaultScale={1}
-              // Viewer uses zero-based page indexing
-              onPageChange={(e: any) => setPageNumber(e.currentPage + 1)}
-              // onLoadError={(err) => {
-              //   console.error(err);
-              //   setLoading(false);
-              // }}
-            />
-          </Worker>
+          {error && (
+            <div className="h-full flex items-center justify-center">
+              <div className="text-center p-6 max-w-md">
+                <p className="text-destructive mb-4">{error}</p>
+                <a href={url} target="_blank" rel="noopener noreferrer">
+                  <Button>Open PDF in new tab</Button>
+                </a>
+              </div>
+            </div>
+          )}
+
+          {!loading && !error && (
+            <ScrollArea className="h-full">
+              <div className="flex justify-center p-4">
+                <Document
+                  file={url}
+                  onLoadSuccess={onDocumentLoadSuccess}
+                  onLoadError={onDocumentLoadError}
+                  loading={
+                    <div className="flex items-center justify-center h-[60vh]">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                  }
+                >
+                  <Page
+                    pageNumber={pageNumber}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                    className="shadow-lg"
+                    width={Math.min(window.innerWidth * 0.8, 800)}
+                  />
+                </Document>
+              </div>
+            </ScrollArea>
+          )}
         </div>
 
-        {numPages > 0 && (
+        {numPages && numPages > 0 && (
           <div className="p-4 border-t flex items-center justify-between">
             <Button
               variant="outline"
@@ -121,7 +162,7 @@ export function PDFViewer({ url, title, isOpen, onClose }: PDFViewerProps) {
               variant="outline"
               size="sm"
               onClick={nextPage}
-              disabled={pageNumber >= numPages}
+              disabled={pageNumber >= (numPages || 1)}
             >
               Next
               <ChevronRight className="h-4 w-4 ml-1" />

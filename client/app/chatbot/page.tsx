@@ -12,6 +12,7 @@ import { TypewriterEffect } from "@/components/chatbot/typewriter-effect";
 import { getCurrentUserToken } from "@/utils/firebase";
 import { BackendUrl } from "@/utils/constants";
 import axios from "axios";
+import { PDFViewer } from "@/components/chatbot/pdf-viewer";
 
 interface Paper {
   title: string;
@@ -37,6 +38,17 @@ export default function ResearchChatbot() {
   const [response, setResponse] = useState<ChatResponse | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  // PDF viewer state
+  const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
+  const [currentPdf, setCurrentPdf] = useState({ url: "", title: "" });
+
+  const openPdfViewer = (url: string, title: string) => {
+    if (url && url !== "N/A") {
+      setCurrentPdf({ url, title });
+      setPdfViewerOpen(true);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,7 +174,7 @@ export default function ResearchChatbot() {
                           {response.papers.map((paper, index) => (
                             <div
                               key={index}
-                              className="bg-background rounded-md p-3 group"
+                              className="bg-background rounded-md p-3 group hover:shadow-md transition-shadow duration-200"
                             >
                               <div className="flex justify-between">
                                 <div className="flex-1">
@@ -186,14 +198,17 @@ export default function ResearchChatbot() {
                                   )}
                                   {paper.pdf_Link &&
                                     paper.pdf_Link !== "N/A" && (
-                                      <a
-                                        href={paper.pdf_Link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                      <button
+                                        onClick={() =>
+                                          openPdfViewer(
+                                            paper.pdf_Link,
+                                            paper.title
+                                          )
+                                        }
                                         className="text-muted-foreground hover:text-foreground transition-colors"
                                       >
                                         <FileText className="h-4 w-4" />
-                                      </a>
+                                      </button>
                                     )}
                                 </div>
                               </div>
@@ -270,6 +285,12 @@ export default function ResearchChatbot() {
           </form>
         </Card>
       </div>
+      <PDFViewer
+        url={currentPdf.url}
+        title={currentPdf.title}
+        isOpen={pdfViewerOpen}
+        onClose={() => setPdfViewerOpen(false)}
+      ></PDFViewer>
     </div>
   );
 }
