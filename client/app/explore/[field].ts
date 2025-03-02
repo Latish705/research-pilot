@@ -44,7 +44,7 @@ export default function Field() {
         { query },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setResponse(res.data.response);
+      setResponse(res.data);
     } catch (error) {
       console.error("Error fetching response:", error);
     } finally {
@@ -60,6 +60,7 @@ export default function Field() {
   }, [response]);
 
   return (
+    
     <div className="container mx-auto py-6 max-w-5xl">
       <Card className="flex flex-col h-[calc(100vh-3rem)] overflow-hidden">
         <ScrollArea className="flex-1 p-6" ref={chatContainerRef}>
