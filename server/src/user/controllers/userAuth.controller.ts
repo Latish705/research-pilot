@@ -12,7 +12,7 @@ export const handleIsFirstLogin = async (
     // Check if the user exists in the database
     const dbUser = await UserModel.findOne({ uuid: user.uid });
 
-    if (user) {
+    if (dbUser) {
       res.status(200).json({ success: true, isFirstLogin: false });
       return;
     } else {
@@ -30,13 +30,28 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   try {
     // @ts-ignore
     const user = req.user;
-    const { profile_bio, contact, expertise, socialLinks } = req.body;
+    const {
+      fullname,
+      mobileNo,
+      researchDomain,
+      currentPos,
+      organization,
+      yearsOfResearchExp,
+      pastResearchWork,
+      researchInterests,
+      profile_bio,
+      contact,
+      expertise,
+      socialLinks,
+    } = req.body;
 
     const requiredFields = [
-      "profile_bio",
-      "contact",
-      "expertise",
-      "socialLinks",
+      "fullname",
+      "researchDomain",
+      "currentPos",
+      "organization",
+      "yearsOfResearchExp",
+      "researchInterests",
     ];
 
     for (const field of requiredFields) {
@@ -50,7 +65,9 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     }
 
     const email = user.email;
-    const existingUser = await UserModel.findOne({ email });
+    const existingUser = await UserModel.findOne({
+      $or: [{ email }, { uuid: user.uid }],
+    });
 
     if (existingUser) {
       res
@@ -62,7 +79,14 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     // Update only provided fields
     const newUser = new UserModel({
       uuid: user.uid,
-      email: user.email,
+      fullname,
+      mobileNo,
+      researchDomain,
+      currentPos,
+      organization,
+      yearsOfResearchExp,
+      pastResearchWork,
+      researchInterests,
       profile_bio,
       contact,
       expertise,

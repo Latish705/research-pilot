@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import appRouter from "./routes";
 // import appRouter from "./route";
 
 const app = express();
@@ -13,6 +14,6 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-// app.use("/api", appRouter);
+app.use("/api", appRouter);
 
 export default app;

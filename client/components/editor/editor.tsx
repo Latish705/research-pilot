@@ -54,12 +54,13 @@ export default function Editor() {
         };
     }, []);
 
-    const setEditorFontSize = (size: string) => {
-        if (editor) {
-            editor.chain().focus().setMark("textStyle", { fontSize: size }).run();
-            setFontSize(size);
-        }
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      provider.destroy();
+      globalYdoc.destroy();
     };
+  }, [provider, globalYdoc]);
 
     const setEditorTextColor = (color: string) => {
         if (editor) {
@@ -67,6 +68,10 @@ export default function Editor() {
             setTextColor(color);
         }
     };
+
+    function setEditorFontSize(value: string): void {
+        throw new Error("Function not implemented.");
+    }
 
     return (
         <div className="w-full max-w-4xl mx-auto mt-10 p-4 border border-blue-500 rounded-lg shadow-lg">

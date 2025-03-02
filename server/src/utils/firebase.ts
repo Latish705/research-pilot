@@ -1,9 +1,14 @@
 import * as admin from "firebase-admin";
+import dotenv from "dotenv";
 
-const Firebase_Credentials = process.env.FIREBASE_CREDENTIALS;
+dotenv.config();
+
+const FIREBASE_CREDENTIALS = JSON.parse(
+  process.env.FIREBASE_CREDENTIALS as string
+);
 
 admin.initializeApp({
-  credential: admin.credential.cert(Firebase_Credentials!),
+  credential: admin.credential.cert(FIREBASE_CREDENTIALS),
 });
 
 export default admin;
