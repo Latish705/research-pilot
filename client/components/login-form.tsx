@@ -76,6 +76,7 @@ export function LoginForm() {
       });
       const isFirstLogin = await checkIsLogin();
       console.log(isFirstLogin);
+      console.log(await getCurrentUserToken());
       if (isFirstLogin) {
         navigation.push("/onboarding");
       } else {
@@ -104,6 +105,7 @@ export function LoginForm() {
 
       const isFirstLogin = await checkIsLogin();
       console.log(isFirstLogin);
+      console.log(await getCurrentUserToken());
 
       if (isFirstLogin) {
         navigation.push("/onboarding");
