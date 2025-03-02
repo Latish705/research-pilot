@@ -43,7 +43,30 @@ async def chat_with_bot(request: QueryRequest):
 async def chat_with_bot(request: QueryRequest):
     query_text = request.text
     
-    response = generate_response(f"Provide Recommendation on {query_text}.Give keyword only for better results.")
+    response = generate_response(f"Provide recommendations based on {query_text}. Give only keywords for better results")
+    
+    return {"response": response}
+
+researchDomains = {
+  "Computer Science",
+  "Biology",
+  "Psychology",
+  "Physics",
+  "Chemistry",
+  "Mathematics",
+  "Medicine",
+  "Economics",
+  "Engineering",
+  "Social Sciences",
+  "Arts & Humanities",
+  "Environmental Science",
+  "Other",
+}
+@app.post("/expert-category")
+async def chat_with_bot(request: QueryRequest):
+    query_text = request.text
+    
+    response = generate_response(f"Get the category of the expert based on {query_text} from the following categories: {researchDomains}. Give only keywords for better results.")
     
     return {"response": response}
 
