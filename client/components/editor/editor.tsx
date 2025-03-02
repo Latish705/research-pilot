@@ -7,6 +7,7 @@ import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
+import Color from "@tiptap/extension-color";
 import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
 import { useEffect, useState } from "react";
@@ -20,27 +21,36 @@ import {
   AlignRightIcon,
 } from "lucide-react";
 
+// ✅ Use a global Yjs document to prevent separate instances
+const globalYdoc = new Y.Doc();
+
 export default function Editor() {
     const [fontSize, setFontSize] = useState("16px");
+    const [textColor, setTextColor] = useState("#000000");
 
-    const ydoc = new Y.Doc();
-    const provider = new WebsocketProvider("wss://demos.yjs.dev", "google-docs-clone", ydoc);
+    const provider = new WebsocketProvider("ws://localhost:1234", "google-docs-clone", globalYdoc);
     
+    provider.on("status", (event) => {
+        console.log("WebSocket Status:", event.status);
+    });
+
     const editor = useEditor({
         extensions: [
             StarterKit,
             TextStyle,
             Underline,
             TextAlign.configure({ types: ["heading", "paragraph"] }),
-            Collaboration.configure({ document: ydoc }), // ✅ Real-time sync enabled
-            CollaborationCursor.configure({ provider, user: { name: "User", color: "#ff5733" } }) // ✅ Shows active users
+            Color.configure({ types: ["textStyle"] }),
+            Collaboration.configure({ document: globalYdoc }),
+            CollaborationCursor.configure({ provider, user: { name: "User", color: "#ff5733" } })
         ],
+        content: "<p style='color: black;'>Start typing...</p>",
     });
 
     useEffect(() => {
         return () => {
             provider.destroy();
-            ydoc.destroy();
+            globalYdoc.destroy();
         };
     }, []);
 
@@ -48,6 +58,13 @@ export default function Editor() {
         if (editor) {
             editor.chain().focus().setMark("textStyle", { fontSize: size }).run();
             setFontSize(size);
+        }
+    };
+
+    const setEditorTextColor = (color: string) => {
+        if (editor) {
+            editor.chain().focus().setColor(color).run();
+            setTextColor(color);
         }
     };
 
@@ -84,6 +101,12 @@ export default function Editor() {
                     <option value="24px">24px</option>
                     <option value="32px">32px</option>
                 </select>
+                <input
+                    type="color"
+                    value={textColor}
+                    onChange={(e) => setEditorTextColor(e.target.value)}
+                    className="border p-1 rounded"
+                />
             </div>
             <EditorContent editor={editor} className="border p-2 min-h-[500px] bg-white" />
         </div>
