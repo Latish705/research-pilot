@@ -43,7 +43,7 @@ async def chat_with_bot(request: QueryRequest):
 async def chat_with_bot(request: QueryRequest):
     query_text = request.text
     
-    response = generate_response(f"Provide insights on {query_text}.")
+    response = generate_response(f"Provide Recommendation on {query_text}.Give keyword only for better results.")
     
     return {"response": response}
 
