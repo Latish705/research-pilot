@@ -143,14 +143,19 @@ export function PaperCard({ paper }: PaperCardProps) {
             </div>
 
             <div className="mt-4 flex justify-end">
-              <Button  variant="outline" size="sm" className="text-xs">
-                <ExternalLink className="h-3 w-3 mr-1" />
-                View Paper
-              </Button>
-              <Button variant="outline" size="sm" className="text-xs">
-                <ExternalLink className="h-3 w-3 mr-1" />
-                View PDF
-              </Button>
+            <Button variant="outline" size="sm" className="text-xs" asChild>
+  <a href={paper.link} target="_blank" rel="noopener noreferrer">
+    <ExternalLink className="h-3 w-3 mr-1" />
+    View Paper
+  </a>
+</Button>
+
+<Button variant="outline" size="sm" className="text-xs" asChild>
+  <a href={paper.pdf_Link } target="_blank" rel="noopener noreferrer">
+    <ExternalLink className="h-3 w-3 mr-1" />
+    View PDF
+  </a>
+</Button>
             </div>
           </div>
         </div>
