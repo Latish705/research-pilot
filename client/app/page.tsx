@@ -1,3 +1,4 @@
+"use client";
 import Editor from "@/components/editor/editor";
 import { LoginForm } from "@/components/login-form";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -9,7 +10,7 @@ export default function Home() {
       <header className="w-full p-4 flex justify-end">
         <ThemeToggle />
       </header>
-      
+
       <main className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
@@ -21,14 +22,14 @@ export default function Home() {
               Your personal research assistant
             </p>
           </div>
-          
+
           <LoginForm />
         </div>
       </main>
       <div>
-            <h1>Collaborative Editor</h1>
-            <Editor />
-        </div>
+        <h1>Collaborative Editor</h1>
+        <Editor />
+      </div>
       <footer className="py-6 text-center text-sm text-muted-foreground">
         <p>© 2025 ResearchHub. All rights reserved.</p>
       </footer>
