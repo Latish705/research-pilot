@@ -1,3 +1,4 @@
+import Editor from "@/components/editor/editor";
 import { LoginForm } from "@/components/login-form";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BookOpen } from "lucide-react";
@@ -24,7 +25,10 @@ export default function Home() {
           <LoginForm />
         </div>
       </main>
-      
+      <div>
+            <h1>Collaborative Editor</h1>
+            <Editor />
+        </div>
       <footer className="py-6 text-center text-sm text-muted-foreground">
         <p>© 2025 ResearchHub. All rights reserved.</p>
       </footer>
