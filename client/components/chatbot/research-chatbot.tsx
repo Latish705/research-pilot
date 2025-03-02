@@ -8,10 +8,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText, ExternalLink, Send, Loader2 } from "lucide-react";
-import { TypewriterEffect } from "@/components/chatbot/typewriter-effect";
-import { getCurrentUserToken } from "@/utils/firebase";
-import { BackendUrl } from "@/utils/constants";
+
 import axios from "axios";
+import { BackendUrl } from "@/utils/constants";
+import { getCurrentUserToken } from "@/utils/firebase";
+import { TypewriterEffect } from "./typewriter-effect";
 
 interface Paper {
   title: string;
@@ -31,7 +32,7 @@ interface ChatResponse {
   keywords?: string;
 }
 
-export default function ResearchChatbot() {
+export function ResearchChatbot() {
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<ChatResponse | null>(null);
@@ -50,16 +51,10 @@ export default function ResearchChatbot() {
       const res = await axios.post(
         `${BackendUrl}/api/user/chatbot`,
         { query },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
       console.log(res.data);
       setResponse(res.data.response);
-      console.log(res.data.response.datasets.datasets);
       setIsTyping(true);
     } catch (error) {
       console.error("Error fetching chat response:", error);
@@ -211,25 +206,11 @@ export default function ResearchChatbot() {
                                   key={index}
                                   className="bg-background rounded-md p-3"
                                 >
-                                  {/* {
-    "ref": "crawford/computer-network-traffic",
-    "title": "Computer Network Traffic",
-    "size": "79KB",
-    "last_updated": "2017-08-18T18:04:48",
-    "download_count": 10332,
-    "vote_count": 134,
-    "usability_rating": 0.7058824
-} */}
-                                  <div>
-                                    <h4 className="font-medium text-sm">
-                                      {dataset.title}
-                                    </h4>
-                                    <p className="text-xs text-muted-foreground mt-1">
-                                      {dataset.ref} -{" "}
-                                    </p>
-                                  </div>
+                                  <h4 className="font-medium text-sm">
+                                    {dataset.name}
+                                  </h4>
                                   <p className="text-xs text-muted-foreground mt-1">
-                                    {dataset.size}
+                                    {dataset.description}
                                   </p>
                                 </div>
                               )
