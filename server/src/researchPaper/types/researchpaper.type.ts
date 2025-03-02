@@ -6,7 +6,5 @@ export interface IResearchPaper extends Document{
     content: string;
     collaborators: string[];
 }
-
-
 export interface IResearchPaperModel extends mongoose.Model<IResearchPaper> {
 }

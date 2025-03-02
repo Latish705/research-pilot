@@ -26,10 +26,10 @@ export default function Home() {
           <LoginForm />
         </div>
       </main>
-      {/* <div>
+      <div>
         <h1>Collaborative Editor</h1>
         <Editor />
-      </div> */}
+      </div>
       <footer className="py-6 text-center text-sm text-muted-foreground">
         <p>© 2025 ResearchHub. All rights reserved.</p>
       </footer>
