@@ -21,11 +21,14 @@ export function RecommendedPapers() {
     const fetchPapers = async () => {
       try {
         const token = await getCurrentUserToken();
+        console.log(token)
         const response = await axios.get(
           `${BackendUrl}/api/user/getRecommendedTopics`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
+        
         const data = response.data;
+        console.log(response.data.response.papers)
         setPapers(data.response.papers);
       } catch (err) {
         if (err instanceof Error) {
@@ -47,7 +50,7 @@ export function RecommendedPapers() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Recommended for You</CardTitle>
+        <CardTitle>Recommended Research Papers</CardTitle>
         <CardDescription>
           Papers based on your research interests and profile
         </CardDescription>

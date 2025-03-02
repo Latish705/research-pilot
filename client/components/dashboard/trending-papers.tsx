@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PaperCard } from "@/components/paper-card";
 
+
+
 // Mock data for trending papers
 const trendingPapers = [
   {

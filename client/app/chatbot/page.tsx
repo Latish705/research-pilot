@@ -12,7 +12,7 @@ import { TypewriterEffect } from "@/components/chatbot/typewriter-effect";
 import { getCurrentUserToken } from "@/utils/firebase";
 import { BackendUrl } from "@/utils/constants";
 import axios from "axios";
-import { PDFViewer } from "@/components/chatbot/pdf-viewer";
+// import { PDFViewer } from "@/components/chatbot/pdf-viewer";
 
 interface Paper {
   title: string;
@@ -285,12 +285,12 @@ export default function ResearchChatbot() {
           </form>
         </Card>
       </div>
-      <PDFViewer
+      {/* <PDFViewer
         url={currentPdf.url}
         title={currentPdf.title}
         isOpen={pdfViewerOpen}
         onClose={() => setPdfViewerOpen(false)}
-      ></PDFViewer>
+      ></PDFViewer> */}
     </div>
   );
 }
