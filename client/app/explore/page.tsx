@@ -124,7 +124,7 @@ export default function ExplorePage() {
 
         <div className="mt-8 text-center">
           <Link href="/chatbot">
-            <Button variant="primary" size="lg">
+            <Button variant="default" size="lg">
               Go to Research Chatbot
             </Button>
           </Link>

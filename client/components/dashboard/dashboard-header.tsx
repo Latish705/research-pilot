@@ -17,7 +17,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { signOut } from "@/utils/firebase";
 import { useRouter } from "next/navigation";
 
-export function DashboardHeader({ activeTab }: { activeTab: string }) {
+export function DashboardHeader() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 

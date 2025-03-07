@@ -69,6 +69,7 @@ export default function TopicIdPage() {
                 <Button
                   variant="link"
                   className="text-blue-500"
+                  // @ts-ignore
                   as="a"
                   href={paper.link}
                   target="_blank"
@@ -83,7 +84,9 @@ export default function TopicIdPage() {
                   <Button
                     variant="link"
                     className="text-blue-500"
+                    // @ts-ignore
                     as="a"
+                    // @ts-ignore
                     href={paper.pdf_Link}
                     target="_blank"
                     rel="noopener noreferrer"
