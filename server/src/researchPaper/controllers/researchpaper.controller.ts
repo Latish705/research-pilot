@@ -162,6 +162,8 @@ export const getSharedPapers = async (req: Request, res: Response) => {
       return;
     }
 
+    console.log(dbUser);
+
     const papers = await PaperUser.find({ collaboratorId: dbUser._id });
 
     if (!papers || papers.length === 0) {
@@ -169,8 +171,15 @@ export const getSharedPapers = async (req: Request, res: Response) => {
       return;
     }
 
-    res.status(200).json(papers);
+    const paperIds = papers.map((paper) => paper.paperId);
+
+    const papersData = await ResearchPaper.find({ _id: { $in: paperIds } });
+
+    res.status(200).json(papersData);
   } catch (error) {
+    // show error in detail
+    console.error("Error in getSharedPapers:", error);
+
     res.status(500).json({
       error:
         error instanceof Error ? error.message : "An unknown error occurred",
@@ -194,6 +203,7 @@ export const addCollaborator = async (
         .json({ error: "Paper ID and collaborator email are required" });
       return;
     }
+    console.log(paperId, collaboratorEmail, role);
 
     const paper = await ResearchPaper.findOne({ _id: paperId });
     const dbUser = await UserModel.findOne({ uuid: user.uid });

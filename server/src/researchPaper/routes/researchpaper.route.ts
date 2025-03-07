@@ -23,4 +23,6 @@ researchPaperRouter.get("/", verifyToken, handleGetAllPaper);
 researchPaperRouter.post("/addCollaborator", verifyToken, addCollaborator);
 researchPaperRouter.get("/getSharedPapers", verifyToken, getSharedPapers);
 
+researchPaperRouter.get("/sharedPapers", verifyToken, getSharedPapers);
+
 export default researchPaperRouter;

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { BackendUrl } from "@/utils/constants";
 import { getCurrentUserToken } from "@/utils/firebase";
 import { Plus } from "lucide-react";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 
 interface Paper {
   _id: string;
@@ -39,11 +40,12 @@ export default function Home() {
 
         // Fetch shared papers
         const sharedPapersRes = await axios.get(
-          `${BackendUrl}/api/researchPaper/getSharedPapers`,
+          `${BackendUrl}/api/researchPaper/sharedPapers`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        console.log("Shared papers:", sharedPapersRes.data);
         setSharedPapers(sharedPapersRes.data);
       } catch (error: any) {
         console.error("Error fetching papers:", error);
@@ -63,6 +65,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
+      <DashboardHeader />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">📄 My Research Papers</h1>
         <Link href="/paper">

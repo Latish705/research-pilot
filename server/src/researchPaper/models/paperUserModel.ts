@@ -1,9 +1,10 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { IResearchPaper } from "../types/researchpaper.type";
+
 import { IUser } from "../../user/models/user.model";
+import { IResearchPaperModel } from "./researchpaper.model";
 
 export interface IPaperUser extends Document {
-  paperId: IResearchPaper["_id"];
+  paperId: IResearchPaperModel["_id"];
   collaboratorId: IUser["_id"];
   role: string;
   status: string;

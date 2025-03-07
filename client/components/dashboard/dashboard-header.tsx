@@ -17,7 +17,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { signOut } from "@/utils/firebase";
 import { useRouter } from "next/navigation";
 
-export function DashboardHeader() {
+export function DashboardHeader({ activeTab }: { activeTab: string }) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,7 +40,7 @@ export function DashboardHeader() {
           <nav className="hidden md:flex gap-6">
             <Link
               href="/dashboard"
-              className="text-sm font-medium transition-colors hover:text-primary"
+              className="text-sm font-medium  transition-colors hover:text-primary"
             >
               Dashboard
             </Link>
@@ -58,7 +58,7 @@ export function DashboardHeader() {
             </Link>
             <Link
               href="/mypaper"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              className="text-sm font-medium  transition-colors hover:text-primary"
             >
               My Papers
             </Link>
