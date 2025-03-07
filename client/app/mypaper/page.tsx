@@ -17,19 +17,28 @@ interface Paper {
 }
 
 export default function Home() {
-  const [papers, setPapers] = useState<Paper[]>([]);
+  const [allPapers, setAllPapers] = useState<Paper[]>([]);
+  const [sharedPapers, setSharedPapers] = useState<Paper[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
-    const getPapers = async () => {
+    const fetchPapers = async () => {
       try {
         const token = await getCurrentUserToken();
         console.log("Token:", token);
-        const res = await axios.get(`${BackendUrl}/api/researchPaper/`, {
+
+        // Fetch all papers
+        const allPapersRes = await axios.get(`${BackendUrl}/api/researchPaper/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log("Papers:", res.data);
-        setPapers(res.data);
+        setAllPapers(allPapersRes.data);
+
+        // Fetch shared papers
+        const sharedPapersRes = await axios.get(`${BackendUrl}/api/researchPaper/shared`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setSharedPapers(sharedPapersRes.data);
       } catch (error: any) {
         console.error("Error fetching papers:", error);
       } finally {
@@ -37,8 +46,14 @@ export default function Home() {
       }
     };
 
-    getPapers();
+    fetchPapers();
   }, []);
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
+
+  const displayedPapers = activeTab === "all" ? allPapers : sharedPapers;
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
@@ -52,13 +67,28 @@ export default function Home() {
         </Link>
       </div>
 
+      <div className="mb-4">
+        <button
+          onClick={() => handleTabChange("all")}
+          className={`px-4 py-2 rounded-lg ${activeTab === "all" ? "bg-white text-black" : "bg-gray-700 text-white"}`}
+        >
+          All Papers
+        </button>
+        <button
+          onClick={() => handleTabChange("shared")}
+          className={`px-4 py-2 rounded-lg ${activeTab === "shared" ? "bg-white text-black" : "bg-gray-700 text-white"}`}
+        >
+          Shared Papers
+        </button>
+      </div>
+
       {loading ? (
         <p className="text-gray-400">Loading papers...</p>
-      ) : papers.length === 0 ? (
+      ) : displayedPapers.length === 0 ? (
         <p className="text-gray-400">No papers found. Create one!</p>
       ) : (
         <ul className="space-y-4">
-          {papers.map((paper) => (
+          {displayedPapers.map((paper) => (
             <li
               key={paper._id}
               className="bg-black border border-gray-600 hover:bg-gray-700 p-4 rounded-lg shadow-md transition"
