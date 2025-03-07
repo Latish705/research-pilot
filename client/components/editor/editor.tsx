@@ -93,7 +93,7 @@ export default function Editor() {
   }, [isSaved]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-10 p-6 border rounded-lg shadow-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+    <div className="w-full max-w-4xl mx-auto mt-10 p-6 border rounded-lg shadow-lg bg-black dark:bg-black dark:border-gray-700">
       <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
         Collaborative Editor
       </h2>
@@ -112,7 +112,7 @@ export default function Editor() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Enter the title of your paper"
-          className="w-full px-3 py-2 mt-1 text-sm border rounded-lg bg-white dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 mt-1 text-sm border rounded-lg bg-white dark:bg-black dark:text-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -120,48 +120,48 @@ export default function Editor() {
       <div className="flex gap-2 mb-4 flex-wrap">
         <Button
           onClick={() => editor?.chain().focus().toggleBold().run()}
-          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:text-white dark:bg-black border border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
         >
           <BoldIcon size={18} />
           Bold
         </Button>
         <Button
           onClick={() => editor?.chain().focus().toggleItalic().run()}
-          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:text-white dark:bg-black border border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
         >
           <ItalicIcon size={18} />
           Italic
         </Button>
         <Button
           onClick={() => editor?.chain().focus().toggleUnderline().run()}
-          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:text-white dark:bg-black border border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
         >
           <UnderlineIcon size={18} />
           Underline
         </Button>
         <Button
           onClick={() => editor?.chain().focus().setTextAlign("left").run()}
-          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:text-white dark:bg-black border border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
         >
           <AlignLeftIcon size={18} />
           Left
         </Button>
         <Button
           onClick={() => editor?.chain().focus().setTextAlign("center").run()}
-          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:text-white dark:bg-black border border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
         >
           <AlignCenterIcon size={18} />
           Center
         </Button>
         <Button
           onClick={() => editor?.chain().focus().setTextAlign("right").run()}
-          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+          className="flex items-center gap-1 px-3 py-2 text-sm font-medium bg-gray-100 dark:text-white dark:bg-black border border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600"
         >
           <AlignRightIcon size={18} />
           Right
         </Button>
         <div className="flex items-center gap-2">
-          <label className="text-sm font-medium text-gray-600 dark:text-gray-400">
+          <label className="text-sm font-medium  text-gray-600 dark:text-gray-200">
             Text Color:
           </label>
           <input
@@ -171,7 +171,7 @@ export default function Editor() {
               setTextColor(e.target.value);
               editor?.chain().focus().setColor(e.target.value).run();
             }}
-            className="w-10 h-10 p-1 rounded border-none cursor-pointer bg-transparent"
+            className="w-10 h-10 p-1 rounded-full border-none cursor-pointer bg-transparent"
           />
         </div>
       </div>
@@ -179,14 +179,14 @@ export default function Editor() {
       {/* Editor Content */}
       <EditorContent
         editor={editor}
-        className="border p-4 min-h-[500px] rounded-lg bg-white dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700"
+        className="border p-4 min-h-[400px]  rounded-lg bg-white dark:bg-black dark:text-gray-200 dark:border-gray-700"
       />
 
       {/* Save Button */}
       <div className="mt-4 flex justify-end">
         <Button
           onClick={saveContent}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg"
+          className="px-4 py-2 text-sm font-medium text-black bg-white "
         >
           Save
         </Button>

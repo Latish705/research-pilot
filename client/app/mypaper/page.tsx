@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BackendUrl } from "@/utils/constants";
 import { getCurrentUserToken } from "@/utils/firebase";
+import { Plus } from "lucide-react";
 
 interface Paper {
   _id: string;
@@ -14,8 +15,24 @@ interface Paper {
 }
 
 export default function Home() {
-  const [papers, setPapers] = useState<Paper[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [papers, setPapers] = useState<Paper[]>([
+    {
+      _id: "1",
+      title: "AI in Healthcare",
+      description: "Exploring the applications of AI in modern medicine.",
+    },
+    {
+      _id: "2",
+      title: "Quantum Computing Breakthroughs",
+      description: "Latest advancements in quantum algorithms and hardware.",
+    },
+    {
+      _id: "3",
+      title: "Climate Change and AI",
+      description: "Using AI to model and mitigate climate change effects.",
+    },
+  ]);
+  const [loading, setLoading] = useState(false); // No need to load since we have dummy data
 
   useEffect(() => {
     const getPapers = async () => {
@@ -32,16 +49,18 @@ export default function Home() {
       }
     };
 
-    getPapers();
+    // Commented out actual API call to always show dummy data
+    // getPapers();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <div className="min-h-screen bg-black text-white p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">📄 My Research Papers</h1>
         <Link href="/paper">
-          <Button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
-            ➕ Create Paper
+          <Button className="bg-white text-black px-4 py-2 rounded-lg flex items-center gap-2">
+            <Plus />
+            <span>Create Paper</span>
           </Button>
         </Link>
       </div>
@@ -51,20 +70,18 @@ export default function Home() {
       ) : papers.length === 0 ? (
         <p className="text-gray-400">No papers found. Create one!</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ul className="space-y-4">
           {papers.map((paper) => (
-            <Link
-              key={paper._id}
-              href={`/paper/${paper._id}`}
-              className="bg-gray-800 hover:bg-gray-700 p-4 rounded-lg shadow-md transition"
-            >
-              <h2 className="text-lg font-semibold">{paper.title}</h2>
-              <p className="text-gray-400 text-sm mt-1">
-                {paper.description || "No description available."}
-              </p>
-            </Link>
+            <li key={paper._id} className="bg-black border border-gray-600 hover:bg-gray-700 p-4 rounded-lg shadow-md transition">
+              <Link href={`/paper/${paper._id}`} className="block">
+                <h2 className="text-lg font-semibold">{paper.title}</h2>
+                <p className="text-gray-400 text-sm mt-1">
+                  {paper.description || "No description available."}
+                </p>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   );

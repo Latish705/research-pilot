@@ -24,7 +24,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           <div className="md:col-span-2 space-y-8">
             <RecommendedPapers />
-            <TrendingPapers />
+            {/* <TrendingPapers /> */}
           </div>
           
           <div className="space-y-6">

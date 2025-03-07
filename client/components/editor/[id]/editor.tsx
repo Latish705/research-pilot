@@ -118,7 +118,7 @@ export default function Editor() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-10 p-4 border border-blue-500 rounded-lg shadow-lg dark:border-gray-600">
+    <div className="w-full max-w-4xl mx-auto mt-10 p-4 border border-white rounded-lg shadow-lg dark:border-gray-600">
       <h2 className="text-xl font-bold mb-2 dark:text-gray-100">
         Collaborative Editor
       </h2>

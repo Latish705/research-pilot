@@ -36,6 +36,7 @@ export const getCurrentUserToken = async (): Promise<string | null> => {
   const user = auth.currentUser;
   if (user) {
     const token = await user.getIdToken();
+    localStorage.setItem('token', token);
     return token;
   }
   return null;
