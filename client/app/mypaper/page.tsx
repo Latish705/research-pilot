@@ -11,28 +11,14 @@ import { Plus } from "lucide-react";
 interface Paper {
   _id: string;
   title: string;
-  description: string;
+  content: string; // HTML content of the paper
+  createdAt: string; // Creation date
+  updatedAt: string; // Last updated date
 }
 
 export default function Home() {
-  const [papers, setPapers] = useState<Paper[]>([
-    {
-      _id: "1",
-      title: "AI in Healthcare",
-      description: "Exploring the applications of AI in modern medicine.",
-    },
-    {
-      _id: "2",
-      title: "Quantum Computing Breakthroughs",
-      description: "Latest advancements in quantum algorithms and hardware.",
-    },
-    {
-      _id: "3",
-      title: "Climate Change and AI",
-      description: "Using AI to model and mitigate climate change effects.",
-    },
-  ]);
-  const [loading, setLoading] = useState(false); // No need to load since we have dummy data
+  const [papers, setPapers] = useState<Paper[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getPapers = async () => {
@@ -45,12 +31,13 @@ export default function Home() {
         console.log("Papers:", res.data);
         setPapers(res.data);
       } catch (error: any) {
-        console.log("Error fetching papers:", error);
+        console.error("Error fetching papers:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    // Commented out actual API call to always show dummy data
-    // getPapers();
+    getPapers();
   }, []);
 
   return (
@@ -72,11 +59,17 @@ export default function Home() {
       ) : (
         <ul className="space-y-4">
           {papers.map((paper) => (
-            <li key={paper._id} className="bg-black border border-gray-600 hover:bg-gray-700 p-4 rounded-lg shadow-md transition">
+            <li
+              key={paper._id}
+              className="bg-black border border-gray-600 hover:bg-gray-700 p-4 rounded-lg shadow-md transition"
+            >
               <Link href={`/paper/${paper._id}`} className="block">
                 <h2 className="text-lg font-semibold">{paper.title}</h2>
                 <p className="text-gray-400 text-sm mt-1">
-                  {paper.description || "No description available."}
+                  Last updated: {new Date(paper.updatedAt).toLocaleString()}
+                </p>
+                <p className="text-gray-400 text-sm mt-1">
+                  Created at: {new Date(paper.createdAt).toLocaleString()}
                 </p>
               </Link>
             </li>

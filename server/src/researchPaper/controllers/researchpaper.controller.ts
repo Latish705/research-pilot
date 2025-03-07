@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import ResearchPaper from "../models/researchpaper.model";
 import UserModel from "../../user/models/user.model";
+import PaperUser from "../models/paperUserModel";
 
 export const handleSaveResearchPaper = async (
   req: Request,
@@ -110,6 +111,52 @@ export const handleGetAllPaper = async (
     res.status(500).json({
       error:
         error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+};
+
+export const addCollaborator = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { paperId, collaboratorEmail, role } = req.body;
+
+    if (!paperId || !collaboratorEmail) {
+      res
+        .status(400)
+        .json({ error: "Paper ID and collaborator email are required" });
+      return;
+    }
+
+    const paper = await ResearchPaper.findOne({ _id: paperId });
+
+    if (!paper) {
+      res.status(404).json({ error: "Document not found" });
+      return;
+    }
+
+    const collaborator = await UserModel.findOne({ email: collaboratorEmail });
+
+    if (!collaborator) {
+      res.status(404).json({ error: "Collaborator not found" });
+      return;
+    }
+
+    const newPairPaperCollaborator = new PaperUser({
+      paperId: paper._id,
+      collaboratorId: collaborator._id,
+      role: role,
+    });
+
+    await newPairPaperCollaborator.save();
+
+    res.status(200).json({
+      message: "Collaborator added successfully",
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
     });
   }
 };

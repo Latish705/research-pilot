@@ -112,3 +112,30 @@ export const getRecommendedDatasets = async (req: Request, res: Response) => {
     return;
   }
 };
+
+export const getPaperOnTopic = async (req: Request, res: Response) => {
+  try {
+    const { topic } = req.params;
+
+    if (!topic) {
+      res.status(400).json({
+        success: false,
+        message: "topic is required",
+      });
+      return;
+    }
+
+    const axiosResponse = await axios.post(`${ml_server_url}/research_papers`, {
+      text: topic,
+    });
+
+    console.log("axiosResponse:", axiosResponse.data);
+
+    res.status(200).json({ success: true, response: axiosResponse.data });
+    return;
+  } catch (error: any) {
+    console.error("Error in getPaperOnTopic:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+    return;
+  }
+};

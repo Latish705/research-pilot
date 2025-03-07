@@ -4,6 +4,7 @@ import { handleGetDetails } from "../controllers/user.controller";
 import verifyToken from "../../middleware/verifyToken";
 import {
   chatWithBot,
+  getPaperOnTopic,
   getRecommendedDatasets,
   getRecommendedTopics,
 } from "../controllers/chatbot.controller";
@@ -17,5 +18,7 @@ userRouter.get("/getDetails", verifyToken, handleGetDetails);
 userRouter.post("/chatbot", verifyToken, chatWithBot);
 userRouter.get("/getRecommendedTopics", verifyToken, getRecommendedTopics);
 userRouter.get("/getRecommendedDatasets", verifyToken, getRecommendedDatasets);
+
+userRouter.get("/getPaperOnTopic/:topic", verifyToken, getPaperOnTopic);
 
 export default userRouter;

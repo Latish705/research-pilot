@@ -93,7 +93,7 @@ export default function Editor() {
   }, [isSaved]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-10 p-6 border rounded-lg shadow-lg bg-black dark:bg-black dark:border-gray-700">
+    <div className="h-5/6 w-full flex flex-col p-6 bg-black dark:bg-black dark:border-gray-700">
       <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
         Collaborative Editor
       </h2>
@@ -179,7 +179,7 @@ export default function Editor() {
       {/* Editor Content */}
       <EditorContent
         editor={editor}
-        className="border p-4 min-h-[400px]  rounded-lg bg-white dark:bg-black dark:text-gray-200 dark:border-gray-700"
+        className="flex-1 border p-4 rounded-lg bg-white dark:bg-black dark:text-gray-200 dark:border-gray-700"
       />
 
       {/* Save Button */}
