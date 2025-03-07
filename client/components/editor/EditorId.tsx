@@ -25,10 +25,12 @@ export default function EditorId({
   paperId,
   title,
   content,
+  role,
 }: {
   paperId: string;
   title: string;
   content: string;
+  role: string;
 }) {
   const [chtitle, setTitle] = useState(title); // Track the title
   const [isSaved, setIsSaved] = useState(true); // Track save state
@@ -90,6 +92,7 @@ export default function EditorId({
         {
           paperId,
           email: collaboratorEmail,
+          role: "editor",
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );

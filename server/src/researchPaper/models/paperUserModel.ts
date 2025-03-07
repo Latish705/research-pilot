@@ -17,7 +17,7 @@ const PaperUserSchema = new Schema<IPaperUser>(
       required: true,
     },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    role: { type: String, required: true },
+    role: { type: String, required: true, default: "viewer" },
   },
   { timestamps: true }
 );

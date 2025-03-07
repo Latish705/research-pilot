@@ -29,15 +29,21 @@ export default function Home() {
         console.log("Token:", token);
 
         // Fetch all papers
-        const allPapersRes = await axios.get(`${BackendUrl}/api/researchPaper/`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const allPapersRes = await axios.get(
+          `${BackendUrl}/api/researchPaper/`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setAllPapers(allPapersRes.data);
 
         // Fetch shared papers
-        const sharedPapersRes = await axios.get(`${BackendUrl}/api/researchPaper/shared`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const sharedPapersRes = await axios.get(
+          `${BackendUrl}/api/researchPaper/getSharedPapers`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setSharedPapers(sharedPapersRes.data);
       } catch (error: any) {
         console.error("Error fetching papers:", error);
@@ -70,13 +76,21 @@ export default function Home() {
       <div className="mb-4">
         <button
           onClick={() => handleTabChange("all")}
-          className={`px-4 py-2 rounded-lg ${activeTab === "all" ? "bg-white text-black" : "bg-gray-700 text-white"}`}
+          className={`px-4 py-2 rounded-lg ${
+            activeTab === "all"
+              ? "bg-white text-black"
+              : "bg-gray-700 text-white"
+          }`}
         >
           All Papers
         </button>
         <button
           onClick={() => handleTabChange("shared")}
-          className={`px-4 py-2 rounded-lg ${activeTab === "shared" ? "bg-white text-black" : "bg-gray-700 text-white"}`}
+          className={`px-4 py-2 rounded-lg ${
+            activeTab === "shared"
+              ? "bg-white text-black"
+              : "bg-gray-700 text-white"
+          }`}
         >
           Shared Papers
         </button>

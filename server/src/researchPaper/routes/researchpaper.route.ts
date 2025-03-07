@@ -2,6 +2,7 @@ import { Router } from "express";
 import verifyToken from "../../middleware/verifyToken";
 import {
   addCollaborator,
+  getSharedPapers,
   handleGetAllPaper,
   handleGetResearchPaper,
   handleSaveResearchPaper,
@@ -20,5 +21,6 @@ researchPaperRouter.put(
 researchPaperRouter.get("/", verifyToken, handleGetAllPaper);
 
 researchPaperRouter.post("/addCollaborator", verifyToken, addCollaborator);
+researchPaperRouter.get("/getSharedPapers", verifyToken, getSharedPapers);
 
 export default researchPaperRouter;

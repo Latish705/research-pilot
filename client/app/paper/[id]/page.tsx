@@ -54,6 +54,7 @@ export default function PaperIdPage() {
   return (
     <div>
       {paper && (
+        //@ts-ignore
         <EditorId paperId={id} title={paper.title} content={paper.content} />
       )}
     </div>

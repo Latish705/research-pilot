@@ -15,7 +15,9 @@ export const handleSaveResearchPaper = async (
   const { title, content } = req.body;
   console.log(title, content);
 
-  const dbUser = await UserModel.findOne({ uuid: user.uid });
+  const dbUser = (await UserModel.findOne({ uuid: user.uid })) as {
+    _id: string;
+  };
   console.log(dbUser);
 
   try {
@@ -69,6 +71,9 @@ export const handleGetResearchPaper = async (
   res: Response
 ): Promise<void> => {
   try {
+    // @ts-ignore
+    const user = req.user;
+
     const paper = await ResearchPaper.findOne({ _id: req.params.paperId });
 
     if (!paper) {
@@ -76,8 +81,38 @@ export const handleGetResearchPaper = async (
       return;
     }
 
+    const dbUser = (await UserModel.findOne({ uuid: user.uid })) as {
+      _id: string;
+    };
+
+    if (!dbUser) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    //@ts-ignore
+    if (paper.author.toString() === dbUser._id.toString()) {
+      res.status(200).json({
+        ...paper.toObject(),
+        role: "owner",
+      });
+      return;
+    }
+
+    const findPaperUser = await PaperUser.findOne({
+      paperId: paper._id,
+      collaboratorId: dbUser._id,
+    });
+
+    if (!findPaperUser) {
+      res
+        .status(401)
+        .json({ error: "You are not authorized to view this document" });
+      return;
+    }
+
     res.status(200).json({
       ...paper.toObject(),
+      role: findPaperUser.role,
     });
   } catch (error) {
     res.status(500).json({
@@ -115,11 +150,41 @@ export const handleGetAllPaper = async (
   }
 };
 
+export const getSharedPapers = async (req: Request, res: Response) => {
+  try {
+    // @ts-ignore
+    const user = req.user;
+
+    const dbUser = await UserModel.findOne({ uuid: user.uid });
+    if (!dbUser) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    const papers = await PaperUser.find({ collaboratorId: dbUser._id });
+
+    if (!papers || papers.length === 0) {
+      res.status(404).json({ error: "No papers found for this user" });
+      return;
+    }
+
+    res.status(200).json(papers);
+  } catch (error) {
+    res.status(500).json({
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    });
+  }
+};
+
 export const addCollaborator = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
+    // @ts-ignore
+    const user = req.user;
+
     const { paperId, collaboratorEmail, role } = req.body;
 
     if (!paperId || !collaboratorEmail) {
@@ -130,7 +195,22 @@ export const addCollaborator = async (
     }
 
     const paper = await ResearchPaper.findOne({ _id: paperId });
+    const dbUser = await UserModel.findOne({ uuid: user.uid });
+    if (!dbUser) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
 
+    if (
+      paper?.author &&
+      typeof paper.author === "string" &&
+      paper.author.toString() !== (dbUser._id as string).toString()
+    ) {
+      res.status(401).json({
+        error: "You are not authorized to add collaborator to this paper",
+      });
+      return;
+    }
     if (!paper) {
       res.status(404).json({ error: "Document not found" });
       return;
