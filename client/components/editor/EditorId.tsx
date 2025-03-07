@@ -92,7 +92,7 @@ export default function EditorId({
         `${BackendUrl}/api/researchPaper/addCollaborator`,
         {
           paperId,
-          email: collaboratorEmail,
+          collaboratorEmail,
           role: collaboratorRole, // Send the selected role
         },
         { headers: { Authorization: `Bearer ${token}` } }

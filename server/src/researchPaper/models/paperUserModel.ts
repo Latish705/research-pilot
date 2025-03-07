@@ -4,7 +4,7 @@ import { IUser } from "../../user/models/user.model";
 
 export interface IPaperUser extends Document {
   paperId: IResearchPaper["_id"];
-  userId: IUser["_id"];
+  collaboratorId: IUser["_id"];
   role: string;
   status: string;
 }
@@ -16,7 +16,11 @@ const PaperUserSchema = new Schema<IPaperUser>(
       ref: "ResearchPaper",
       required: true,
     },
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    collaboratorId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     role: { type: String, required: true, default: "viewer" },
   },
   { timestamps: true }

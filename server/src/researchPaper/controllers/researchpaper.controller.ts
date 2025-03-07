@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import ResearchPaper from "../models/researchpaper.model";
 import UserModel from "../../user/models/user.model";
 import PaperUser from "../models/paperUserModel";
+import admin from "../../utils/firebase";
 
 export const handleSaveResearchPaper = async (
   req: Request,
@@ -216,16 +217,23 @@ export const addCollaborator = async (
       return;
     }
 
-    const collaborator = await UserModel.findOne({ email: collaboratorEmail });
+    const collaborator = await admin.auth().getUserByEmail(collaboratorEmail);
+    console.log(collaborator);
+    console.log(collaborator.uid);
 
     if (!collaborator) {
       res.status(404).json({ error: "Collaborator not found" });
       return;
     }
 
+    const collaboratorDbUser = await UserModel.findOne({
+      uuid: collaborator.uid,
+    });
+    console.log(collaboratorDbUser);
+
     const newPairPaperCollaborator = new PaperUser({
       paperId: paper._id,
-      collaboratorId: collaborator._id,
+      collaboratorId: collaboratorDbUser?._id,
       role: role,
     });
 
@@ -235,6 +243,9 @@ export const addCollaborator = async (
       message: "Collaborator added successfully",
     });
   } catch (error: any) {
+    // log error in detail
+    console.error("Error in addCollaborator:", error);
+
     res.status(500).json({
       error: error.message,
     });
