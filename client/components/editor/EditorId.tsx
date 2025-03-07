@@ -35,6 +35,7 @@ export default function EditorId({
   const [textColor, setTextColor] = useState("#000000");
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [collaboratorEmail, setCollaboratorEmail] = useState("");
+  const [collaboratorRole, setCollaboratorRole] = useState("viewer"); // Default role
 
   const editor = useEditor({
     extensions: [
@@ -90,11 +91,13 @@ export default function EditorId({
         {
           paperId,
           email: collaboratorEmail,
+          role: collaboratorRole, // Send the selected role
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       alert("Collaborator added successfully!");
       setCollaboratorEmail("");
+      setCollaboratorRole("viewer"); // Reset to default
       setIsShareDialogOpen(false);
     } catch (err) {
       console.error("Failed to add collaborator:", err);
@@ -187,6 +190,21 @@ export default function EditorId({
               onChange={(e) => setCollaboratorEmail(e.target.value)}
               className="w-full px-3 py-2 mb-4 text-sm border rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            <label
+              htmlFor="role"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Role
+            </label>
+            <select
+              id="role"
+              value={collaboratorRole}
+              onChange={(e) => setCollaboratorRole(e.target.value)}
+              className="w-full px-3 py-2 mb-4 text-sm border rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="viewer">Viewer</option>
+              <option value="editor">Editor</option>
+            </select>
             <div className="flex justify-end gap-2">
               <Button
                 onClick={() => setIsShareDialogOpen(false)}
