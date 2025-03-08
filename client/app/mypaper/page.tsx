@@ -65,7 +65,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
-      <DashboardHeader />
+      <DashboardHeader activeTab={""} />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">📄 My Research Papers</h1>
         <Link href="/paper">

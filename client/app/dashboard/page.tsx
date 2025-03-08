@@ -9,7 +9,7 @@ import { Chatbot } from "@/components/chatbot";
 export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <DashboardHeader />
+      <DashboardHeader activeTab={""} />
       
       <main className="flex-1 container mx-auto px-4 py-6">
         <div className="mb-8">
@@ -33,8 +33,7 @@ export default function DashboardPage() {
         </div>
       </main>
       
-      <Chatbot />
-      
+      <Chatbot/>
       <footer className="py-6 text-center text-sm text-muted-foreground border-t">
         <p>© 2025 ResearchHub. All rights reserved.</p>
       </footer>

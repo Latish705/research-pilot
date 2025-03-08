@@ -5,6 +5,9 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+  onAuthStateChanged,
 } from "firebase/auth"; // Authentication
 
 const firebaseConfig = {
@@ -33,14 +36,47 @@ export const emailPasswordSignIn = async (email: string, password: string) => {
 };
 
 export const getCurrentUserToken = async (): Promise<string | null> => {
-  const user = auth.currentUser;
-  if (user) {
-    const token = await user.getIdToken();
-    localStorage.setItem("token", token);
-    return token;
-  }
-  return null;
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const token = await user.getIdToken();
+          localStorage.setItem("token", token); // Optional: Save the token for reuse
+          resolve(token);
+        } catch (error) {
+          console.error("Error fetching token:", error);
+          reject(null);
+        }
+      } else {
+        resolve(null); // No user is signed in
+      }
+    });
+  });
 };
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("User signed in:", user);
+
+    // Get and store the fresh token whenever the auth state changes
+    user.getIdToken(true).then((newToken) => {
+      console.log("Updated Access Token:", newToken);
+      localStorage.setItem("accessToken", newToken); // Store the updated access token
+      //@ts-ignore
+      localStorage.setItem("refreshToken", user.stsTokenManager.refreshToken); // Store the updated refresh token
+    });
+  } else {
+    console.log("No user signed in");
+  }
+});
+
+setPersistence(auth, browserLocalPersistence)
+  .then(() => {
+    console.log("Persistence set to local");
+  })
+  .catch((error) => {
+    console.error("Error setting persistence:", error);
+  });
 
 export const signOut = async () => {
   await auth.signOut();

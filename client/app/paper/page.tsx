@@ -4,7 +4,7 @@ import Editor from "@/components/editor/editor";
 export default function PaperPage() {
   return (
     <div className="min-h-screen h-screen bg-background">
-      <DashboardHeader />
+      <DashboardHeader activeTab={""} />
       <Editor />
     </div>
   );
